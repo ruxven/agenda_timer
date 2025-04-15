@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
+"""Agenda Timer Application"""
 import tkinter as tk
 from tkinter import ttk
 import re
 import argparse
-from datetime import datetime, timedelta
-from pathlib import Path
 
 
 class TimerWidget(ttk.Frame):
+    """A widget representing a timer with a description and countdown functionality."""
+
     def __init__(self, parent, description, minutes):
         super().__init__(parent)
         self.description = description
@@ -20,6 +21,7 @@ class TimerWidget(ttk.Frame):
         self.update_display()
 
     def create_widgets(self):
+        """A widget to display and control a timer."""
         # Description label
         self.desc_label = ttk.Label(self, text=self.description, wraplength=200)
         self.desc_label.grid(row=0, column=0, columnspan=3, sticky="w", padx=5, pady=2)
@@ -36,6 +38,7 @@ class TimerWidget(ttk.Frame):
         self.reset_button.grid(row=1, column=2, padx=2)
 
     def update_display(self):
+        """Update the timer display and apply color coding based on remaining time."""
         minutes = self.remaining_seconds // 60
         seconds = self.remaining_seconds % 60
         time_str = f"{minutes:02d}:{seconds:02d}"
@@ -53,18 +56,21 @@ class TimerWidget(ttk.Frame):
             self.time_label.configure(foreground="black", background="lightgreen")
 
     def toggle_timer(self):
+        """Toggle the timer between running and paused states."""
         self.running = not self.running
         self.start_button.config(text="Stop" if self.running else "Start")
         if self.running:
             self.update_timer()
 
     def update_timer(self):
+        """Update the timer countdown and schedule the next update if running."""
         if self.running and self.remaining_seconds > 0:
             self.remaining_seconds -= 1
             self.update_display()
             self.after(1000, self.update_timer)
 
     def reset_timer(self):
+        """Reset the timer to its initial state."""
         self.running = False
         self.start_button.config(text="Start")
         self.remaining_seconds = self.total_seconds
@@ -77,6 +83,7 @@ Q&A session - 10 minutes"""
 
 
 def read_agenda_file(file_path):
+    """Read and return the content of an agenda file."""
     try:
         with open(file_path, "r") as f:
             return f.read().strip()
@@ -86,6 +93,8 @@ def read_agenda_file(file_path):
 
 
 class AgendaTimerApp:
+    """Main application class for the Agenda Timer."""
+
     def __init__(self, root, initial_agenda=None):
         self.root = root
         self.root.title("Agenda Timer")
@@ -97,12 +106,14 @@ class AgendaTimerApp:
         self.setup_styles()
 
     def setup_styles(self):
+        """Configure styles for the agenda timer application."""
         style = ttk.Style()
         style.configure("Normal.TFrame", background="white")
         style.configure("Warning.TFrame", background="#fff3e0")
         style.configure("Danger.TFrame", background="#ffebee")
 
     def create_widgets(self):
+        """Create and configure the widgets for the agenda timer application."""
         # Input area
         input_frame = ttk.Frame(self.root)
         input_frame.pack(fill="x", padx=10, pady=5)
@@ -133,6 +144,7 @@ class AgendaTimerApp:
         self.timer_container.pack(fill="both", expand=True, padx=10, pady=5)
 
     def parse_agenda(self):
+        """Parse the agenda text input and create timer widgets for each entry."""
         # Clear existing timers
         for widget in self.timer_widgets:
             widget.destroy()
@@ -157,6 +169,7 @@ class AgendaTimerApp:
 
 
 def main():
+    """Main function to initialize and run the Agenda Timer Application."""
     parser = argparse.ArgumentParser(description="Agenda Timer Application")
     parser.add_argument("--input", "-i", type=str, help="Path to agenda input file")
     args = parser.parse_args()

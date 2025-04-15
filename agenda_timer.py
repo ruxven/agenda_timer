@@ -85,9 +85,12 @@ Q&A session - 10 minutes"""
 def read_agenda_file(file_path):
     """Read and return the content of an agenda file."""
     try:
-        with open(file_path, "r") as f:
+        with open(file_path, "r", encoding="UTF-8") as f:
             return f.read().strip()
-    except Exception as e:
+    except FileNotFoundError:
+        print(f"File not found: {file_path}")
+        return None
+    except IOError as e:
         print(f"Error reading file {file_path}: {e}")
         return None
 
@@ -181,7 +184,7 @@ def main():
             print(f"Failed to read agenda from {args.input}, using preset agenda")
 
     root = tk.Tk()
-    app = AgendaTimerApp(root, initial_agenda)
+    AgendaTimerApp(root, initial_agenda)
     root.mainloop()
 
 

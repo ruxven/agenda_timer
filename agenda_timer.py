@@ -163,13 +163,13 @@ class AgendaTimerApp:
             # Skip empty lines
             if not line.strip():
                 continue
-            
+
             # Skip comment lines starting with #
-            if line.strip().startswith('#'):
+            if line.strip().startswith("#"):
                 continue
 
             # Remove inline comments (anything after #)
-            line = line.split('#')[0].strip()
+            line = line.split("#")[0].strip()
             if not line:  # Skip if line was only a comment
                 continue
 

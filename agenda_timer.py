@@ -114,7 +114,7 @@ class AgendaTimerApp:
         self.root.title("Agenda Timer")
         self.timer_widgets = []
         self.initial_agenda = initial_agenda if initial_agenda else PRESET_AGENDA
-        self.agenda_source = "file" if initial_agenda else "preset"
+        self.always_on_top = False
 
         self.create_widgets()
         self.setup_styles()
@@ -149,12 +149,13 @@ class AgendaTimerApp:
         self.toggle_button = ttk.Button(
             toggle_frame, text="Hide Text Input", command=self.toggle_text_input
         )
-        self.toggle_button.pack(side="left")
+        self.toggle_button.pack(side="left", padx=(0, 5))
 
-        source_text = (
-            "Source: File" if self.agenda_source == "file" else "Source: Preset Example"
+        self.always_on_top = False
+        self.on_top_button = ttk.Button(
+            toggle_frame, text="Stay on Top: Off", command=self.toggle_always_on_top
         )
-        ttk.Label(toggle_frame, text=source_text).pack(side="left", padx=10)
+        self.on_top_button.pack(side="left")
 
         # Create a container for the text input section
         self.text_section = ttk.Frame(self.input_frame)
@@ -180,6 +181,14 @@ class AgendaTimerApp:
         # Timer container
         self.timer_container = ttk.Frame(self.root)
         self.timer_container.pack(fill="both", expand=True, padx=10, pady=5)
+
+    def toggle_always_on_top(self):
+        """Toggle the window's always-on-top state."""
+        self.always_on_top = not self.always_on_top
+        self.root.attributes("-topmost", self.always_on_top)
+        self.on_top_button.config(
+            text=f"Stay on Top: {'On' if self.always_on_top else 'Off'}"
+        )
 
     def parse_agenda(self):
         """Parse the agenda text input and create timer widgets for each entry."""

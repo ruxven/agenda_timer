@@ -128,6 +128,9 @@ class AgendaTimerApp:
     def __init__(self, root, initial_agenda=None):
         self.root = root
         self.root.title("Agenda Timer")
+        # Use system theme
+        self.style = tkinter.ttk.Style()
+        self.style.theme_use("clam")  # Using 'clam' as it's available across platforms
         self.timer_widgets = []
         self.initial_agenda = initial_agenda if initial_agenda else PRESET_AGENDA
         self.always_on_top = False
@@ -137,11 +140,15 @@ class AgendaTimerApp:
 
     def setup_styles(self):
         """Configure styles for the agenda timer application."""
-        style = tkinter.ttk.Style()
-        style.configure("Inactive.TFrame", background="#f5f5f5")
-        style.configure("Active.TFrame", background="#e8f5e9")
-        style.configure("Warning.TFrame", background="#fff3e0")
-        style.configure("Danger.TFrame", background="#ffebee")
+        # Configure frame styles while maintaining state visibility
+        self.style.configure("Inactive.TFrame")
+        self.style.configure("Active.TFrame")
+        self.style.configure("Warning.TFrame")
+        self.style.configure("Danger.TFrame")
+
+        # Let widgets use system theme defaults
+        self.style.configure("TFrame")
+        self.style.configure("TLabel")
 
     def toggle_text_input(self):
         """Toggle the visibility of the text input section."""

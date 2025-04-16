@@ -1,5 +1,5 @@
 [DESIGN]
 max-parents=10
 # mitigates R0901, "Too many parents"
-max-attributes=10
+max-attributes=15
 # mitigates R0902, "Too many attributes"

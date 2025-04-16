@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Agenda Timer Application"""
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, filedialog
 import re
 import argparse
 
@@ -160,11 +160,18 @@ class AgendaTimerApp:
         # Create a container for the text input section
         self.text_section = ttk.Frame(self.input_frame)
         self.text_section.pack(fill="x")
-
+        # Create a frame for the load file button
+        button_frame = ttk.Frame(self.text_section)
+        button_frame.pack(fill="x", anchor="w")
         ttk.Label(
-            self.text_section,
+            button_frame,
             text="Enter agenda items (format: 'Description - XX minutes'):",
-        ).pack(anchor="w")
+        ).pack(side="left")
+
+        self.load_button = ttk.Button(
+            button_frame, text="Load File", command=self.load_file
+        )
+        self.load_button.pack(side="left", padx=5)
 
         self.text_input = tk.Text(self.text_section, height=10, width=50)
         self.text_input.pack(fill="x", pady=5)
@@ -189,6 +196,20 @@ class AgendaTimerApp:
         self.on_top_button.config(
             text=f"Stay on Top: {'On' if self.always_on_top else 'Off'}"
         )
+
+    def load_file(self):
+        """Open a file dialog to select and load a text file into the text input."""
+        file_path = filedialog.askopenfilename(
+            filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
+        )
+        if file_path:
+            try:
+                with open(file_path, "r", encoding="UTF-8") as file:
+                    content = file.read()
+                    self.text_input.delete("1.0", tk.END)
+                    self.text_input.insert("1.0", content)
+            except (IOError, OSError, UnicodeDecodeError) as e:
+                tk.messagebox.showerror("Error", f"Failed to load file: {str(e)}")
 
     def parse_agenda(self):
         """Parse the agenda text input and create timer widgets for each entry."""

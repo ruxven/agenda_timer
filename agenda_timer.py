@@ -38,27 +38,36 @@ class TimerWidget(ttk.Frame):
         self.reset_button.grid(row=1, column=2, padx=2)
 
     def update_display(self):
-        """Update the timer display and apply color coding based on remaining time."""
+        """Update the timer display and apply color coding based on remaining time and state."""
         minutes = self.remaining_seconds // 60
         seconds = self.remaining_seconds % 60
         time_str = f"{minutes:02d}:{seconds:02d}"
         self.time_label.config(text=time_str)
 
-        # Color coding based on remaining time
-        if self.remaining_seconds <= 0:
+        # Color coding based on timer state and remaining time
+        if not self.running:
+            # Inactive state
+            self.configure(style="Inactive.TFrame")
+            self.time_label.configure(foreground="#444444", background="#e0e0e0")
+        elif self.remaining_seconds <= 0:
+            # Danger state
             self.configure(style="Danger.TFrame")
             self.time_label.configure(foreground="white", background="red")
         elif self.remaining_seconds <= 60:  # 1 minute = 60 seconds
+            # Warning state
             self.configure(style="Warning.TFrame")
             self.time_label.configure(foreground="black", background="orange")
         else:
-            self.configure(style="Normal.TFrame")
-            self.time_label.configure(foreground="black", background="lightgreen")
+            # Active state
+            self.configure(style="Active.TFrame")
+            self.time_label.configure(foreground="black", background="#90EE90")
 
     def toggle_timer(self):
         """Toggle the timer between running and paused states."""
         self.running = not self.running
         self.start_button.config(text="Stop" if self.running else "Start")
+        # Update display to show correct color state
+        self.update_display()
         if self.running:
             self.update_timer()
 
@@ -113,7 +122,8 @@ class AgendaTimerApp:
     def setup_styles(self):
         """Configure styles for the agenda timer application."""
         style = ttk.Style()
-        style.configure("Normal.TFrame", background="white")
+        style.configure("Inactive.TFrame", background="#f5f5f5")
+        style.configure("Active.TFrame", background="#e8f5e9")
         style.configure("Warning.TFrame", background="#fff3e0")
         style.configure("Danger.TFrame", background="#ffebee")
 

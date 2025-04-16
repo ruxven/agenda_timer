@@ -77,9 +77,11 @@ class TimerWidget(ttk.Frame):
         self.update_display()
 
 
-PRESET_AGENDA = """Opening remarks - 5 minutes
-Project update - 15 minutes
-Q&A session - 10 minutes"""
+PRESET_AGENDA = """# Example agenda with comments
+Opening remarks - 5 minutes  # Introduction and welcome
+Project update - 15 minutes  # Include demo
+# Break time if needed
+Q&A session - 10 minutes     # Open discussion"""
 
 
 def read_agenda_file(file_path):
@@ -158,7 +160,17 @@ class AgendaTimerApp:
         lines = text.split("\n")
 
         for line in lines:
+            # Skip empty lines
             if not line.strip():
+                continue
+            
+            # Skip comment lines starting with #
+            if line.strip().startswith('#'):
+                continue
+
+            # Remove inline comments (anything after #)
+            line = line.split('#')[0].strip()
+            if not line:  # Skip if line was only a comment
                 continue
 
             match = re.match(r"(.*?)\s*-\s*(\d+)\s*minutes?", line)

@@ -2,6 +2,8 @@
 
 A Python-based desktop application that helps you manage and track time during meetings or presentations. The application provides visual timers for each agenda item, with color-coded indicators to help keep your meetings on schedule.
 
+This project was created with the help of the CodeLLM editor published by Abacus.ai and Claude Sonnet 3.5.
+
 ## Features
 
 - Create multiple timers for different agenda items

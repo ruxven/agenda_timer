@@ -117,22 +117,45 @@ class AgendaTimerApp:
         style.configure("Warning.TFrame", background="#fff3e0")
         style.configure("Danger.TFrame", background="#ffebee")
 
+    def toggle_text_input(self):
+        """Toggle the visibility of the text input section."""
+        if self.text_section.winfo_viewable():
+            self.text_section.pack_forget()
+            self.toggle_button.config(text="Show Text Input")
+        else:
+            self.text_section.pack(fill="x")
+            self.toggle_button.config(text="Hide Text Input")
+
     def create_widgets(self):
         """Create and configure the widgets for the agenda timer application."""
         # Input area
-        input_frame = ttk.Frame(self.root)
-        input_frame.pack(fill="x", padx=10, pady=5)
+        self.input_frame = ttk.Frame(self.root)
+        self.input_frame.pack(fill="x", padx=10, pady=5)
+
+        # Toggle button frame
+        toggle_frame = ttk.Frame(self.input_frame)
+        toggle_frame.pack(fill="x")
+
+        self.toggle_button = ttk.Button(
+            toggle_frame, text="Hide Text Input", command=self.toggle_text_input
+        )
+        self.toggle_button.pack(side="left")
 
         source_text = (
             "Source: File" if self.agenda_source == "file" else "Source: Preset Example"
         )
-        ttk.Label(input_frame, text=source_text).pack(anchor="w")
+        ttk.Label(toggle_frame, text=source_text).pack(side="left", padx=10)
+
+        # Create a container for the text input section
+        self.text_section = ttk.Frame(self.input_frame)
+        self.text_section.pack(fill="x")
 
         ttk.Label(
-            input_frame, text="Enter agenda items (format: 'Description - XX minutes'):"
+            self.text_section,
+            text="Enter agenda items (format: 'Description - XX minutes'):",
         ).pack(anchor="w")
 
-        self.text_input = tk.Text(input_frame, height=10, width=50)
+        self.text_input = tk.Text(self.text_section, height=10, width=50)
         self.text_input.pack(fill="x", pady=5)
 
         # Insert initial agenda
@@ -140,7 +163,7 @@ class AgendaTimerApp:
 
         # Parse button
         parse_button = ttk.Button(
-            input_frame, text="Create Timers", command=self.parse_agenda
+            self.text_section, text="Create Timers", command=self.parse_agenda
         )
         parse_button.pack(pady=5)
 

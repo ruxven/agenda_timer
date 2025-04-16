@@ -21,13 +21,23 @@ class TimerWidget(ttk.Frame):
         self.update_display()
 
     def create_widgets(self):
-        """A widget to display and control a timer."""
+        """A widget to display and control a timer."""  # Get default font and its size
+        default_font = tk.font.nametofont("TkDefaultFont")
+        default_size = default_font.cget("size")
+        timer_font = default_font.copy()
+        timer_font.configure(size=default_size * 2)
+        # Get default font and its size
+        default_font = tk.font.nametofont("TkDefaultFont")
+        default_size = default_font.cget("size")
+        timer_font = default_font.copy()
+        # Time display with doubled font size
+        self.time_label = ttk.Label(self, text="00:00", font=timer_font)
         # Description label
         self.desc_label = ttk.Label(self, text=self.description, wraplength=200)
         self.desc_label.grid(row=0, column=0, columnspan=3, sticky="w", padx=5, pady=2)
 
-        # Time display
-        self.time_label = ttk.Label(self, text="00:00")
+        # Time display with doubled font size
+        self.time_label = ttk.Label(self, text="00:00", font=timer_font)
         self.time_label.grid(row=1, column=0, padx=5)
 
         # Control buttons

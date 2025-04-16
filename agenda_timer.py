@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Agenda Timer Application"""
-import tkinter as tk
-from tkinter import ttk, filedialog
+import tkinter
+import tkinter.ttk
+import tkinter.font
+import tkinter.filedialog
 import re
 import argparse
 
 
-class TimerWidget(ttk.Frame):
+class TimerWidget(tkinter.ttk.Frame):
     """A widget representing a timer with a description and countdown functionality."""
 
     def __init__(self, parent, description, minutes):
@@ -22,29 +24,33 @@ class TimerWidget(ttk.Frame):
 
     def create_widgets(self):
         """A widget to display and control a timer."""  # Get default font and its size
-        default_font = tk.font.nametofont("TkDefaultFont")
+        # Get default font and its size
+        default_font = tkinter.font.nametofont("TkDefaultFont")
         default_size = default_font.cget("size")
+
+        # Create timer font with doubled size
         timer_font = default_font.copy()
         timer_font.configure(size=default_size * 2)
-        # Get default font and its size
-        default_font = tk.font.nametofont("TkDefaultFont")
-        default_size = default_font.cget("size")
-        timer_font = default_font.copy()
+
         # Time display with doubled font size
-        self.time_label = ttk.Label(self, text="00:00", font=timer_font)
+        self.time_label = tkinter.ttk.Label(self, text="00:00", font=timer_font)
         # Description label
-        self.desc_label = ttk.Label(self, text=self.description, wraplength=200)
+        self.desc_label = tkinter.ttk.Label(self, text=self.description, wraplength=200)
         self.desc_label.grid(row=0, column=0, columnspan=3, sticky="w", padx=5, pady=2)
 
         # Time display with doubled font size
-        self.time_label = ttk.Label(self, text="00:00", font=timer_font)
+        self.time_label = tkinter.ttk.Label(self, text="00:00", font=timer_font)
         self.time_label.grid(row=1, column=0, padx=5)
 
         # Control buttons
-        self.start_button = ttk.Button(self, text="Start", command=self.toggle_timer)
+        self.start_button = tkinter.ttk.Button(
+            self, text="Start", command=self.toggle_timer
+        )
         self.start_button.grid(row=1, column=1, padx=2)
 
-        self.reset_button = ttk.Button(self, text="Reset", command=self.reset_timer)
+        self.reset_button = tkinter.ttk.Button(
+            self, text="Reset", command=self.reset_timer
+        )
         self.reset_button.grid(row=1, column=2, padx=2)
 
     def update_display(self):
@@ -131,7 +137,7 @@ class AgendaTimerApp:
 
     def setup_styles(self):
         """Configure styles for the agenda timer application."""
-        style = ttk.Style()
+        style = tkinter.ttk.Style()
         style.configure("Inactive.TFrame", background="#f5f5f5")
         style.configure("Active.TFrame", background="#e8f5e9")
         style.configure("Warning.TFrame", background="#fff3e0")
@@ -149,54 +155,54 @@ class AgendaTimerApp:
     def create_widgets(self):
         """Create and configure the widgets for the agenda timer application."""
         # Input area
-        self.input_frame = ttk.Frame(self.root)
+        self.input_frame = tkinter.ttk.Frame(self.root)
         self.input_frame.pack(fill="x", padx=10, pady=5)
 
         # Toggle button frame
-        toggle_frame = ttk.Frame(self.input_frame)
+        toggle_frame = tkinter.ttk.Frame(self.input_frame)
         toggle_frame.pack(fill="x")
 
-        self.toggle_button = ttk.Button(
+        self.toggle_button = tkinter.ttk.Button(
             toggle_frame, text="Hide Text Input", command=self.toggle_text_input
         )
         self.toggle_button.pack(side="left", padx=(0, 5))
 
         self.always_on_top = False
-        self.on_top_button = ttk.Button(
+        self.on_top_button = tkinter.ttk.Button(
             toggle_frame, text="Stay on Top: Off", command=self.toggle_always_on_top
         )
         self.on_top_button.pack(side="left")
 
         # Create a container for the text input section
-        self.text_section = ttk.Frame(self.input_frame)
+        self.text_section = tkinter.ttk.Frame(self.input_frame)
         self.text_section.pack(fill="x")
         # Create a frame for the load file button
-        button_frame = ttk.Frame(self.text_section)
+        button_frame = tkinter.ttk.Frame(self.text_section)
         button_frame.pack(fill="x", anchor="w")
-        ttk.Label(
+        tkinter.ttk.Label(
             button_frame,
             text="Enter agenda items (format: 'Description - XX minutes'):",
         ).pack(side="left")
 
-        self.load_button = ttk.Button(
+        self.load_button = tkinter.ttk.Button(
             button_frame, text="Load File", command=self.load_file
         )
         self.load_button.pack(side="left", padx=5)
 
-        self.text_input = tk.Text(self.text_section, height=10, width=50)
+        self.text_input = tkinter.Text(self.text_section, height=10, width=50)
         self.text_input.pack(fill="x", pady=5)
 
         # Insert initial agenda
         self.text_input.insert("1.0", self.initial_agenda)
 
         # Parse button
-        parse_button = ttk.Button(
+        parse_button = tkinter.ttk.Button(
             self.text_section, text="Create Timers", command=self.parse_agenda
         )
         parse_button.pack(pady=5)
 
         # Timer container
-        self.timer_container = ttk.Frame(self.root)
+        self.timer_container = tkinter.ttk.Frame(self.root)
         self.timer_container.pack(fill="both", expand=True, padx=10, pady=5)
 
     def toggle_always_on_top(self):
@@ -209,17 +215,17 @@ class AgendaTimerApp:
 
     def load_file(self):
         """Open a file dialog to select and load a text file into the text input."""
-        file_path = filedialog.askopenfilename(
+        file_path = tkinter.filedialog.askopenfilename(
             filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
         )
         if file_path:
             try:
                 with open(file_path, "r", encoding="UTF-8") as file:
                     content = file.read()
-                    self.text_input.delete("1.0", tk.END)
+                    self.text_input.delete("1.0", tkinter.END)
                     self.text_input.insert("1.0", content)
             except (IOError, OSError, UnicodeDecodeError) as e:
-                tk.messagebox.showerror("Error", f"Failed to load file: {str(e)}")
+                tkinter.messagebox.showerror("Error", f"Failed to load file: {str(e)}")
 
     def parse_agenda(self):
         """Parse the agenda text input and create timer widgets for each entry."""
@@ -268,7 +274,7 @@ def main():
         if initial_agenda is None:
             print(f"Failed to read agenda from {args.input}, using preset agenda")
 
-    root = tk.Tk()
+    root = tkinter.Tk()
     AgendaTimerApp(root, initial_agenda)
     root.mainloop()
 

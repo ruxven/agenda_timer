@@ -97,3 +97,38 @@ class TimerWidget(tkinter.ttk.Frame):
         self.start_button.config(text="Start")
         self.remaining_seconds = self.total_seconds
         self.update_display()
+
+
+def setup_styles(root):
+    """Set up the styles used by the timer widget."""
+    style = tkinter.ttk.Style(root)
+
+    # Frame styles for different states
+    style.configure("Inactive.TFrame", background="#e0e0e0")
+    style.configure("Active.TFrame", background="#90EE90")
+    style.configure("Warning.TFrame", background="orange")
+    style.configure("Danger.TFrame", background="red")
+
+
+def main():
+    """Main function to run the timer widget as a standalone application."""
+    root = tkinter.Tk()
+    root.title("Timer Widget Test")
+
+    # Set up the styles
+    setup_styles(root)
+
+    # Create a test timer (5 minutes)
+    timer = TimerWidget(root, "Test Timer (5 minutes)", 5)
+    timer.pack(padx=20, pady=20)
+
+    # Add a quit button
+    quit_button = tkinter.ttk.Button(root, text="Quit", command=root.destroy)
+    quit_button.pack(pady=10)
+
+    # Start the application
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()
